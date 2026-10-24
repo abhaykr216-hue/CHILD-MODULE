@@ -11,8 +11,14 @@ data "azurerm_subnet" "jio-sub" {
   virtual_network_name = each.value.virtual_network_name
   
 }
+
+data "azurerm_key_vault" "kv-jio-ran" {
+  name                = "hawelifrontendkeyvault"
+  resource_group_name = "haweli-pipe-rg"
+}
+
 data "azurerm_key_vault_secret" "jio-secrets" {
     for_each = var.nics
   name         = each.value.secret_name
-  key_vault_id = each.value.key_vault_id
+  key_vault_id = data.azurerm_key_vault.kv-jio-ran.id
 }
